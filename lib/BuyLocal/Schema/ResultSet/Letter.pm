@@ -9,7 +9,6 @@ use parent 'DBIx::Class::ResultSet';
 
 sub get_letter {
     my ( $self, $id ) = @_;
-    print $id;
     my $schema = $self->result_source->schema;
     my $letter = $self->search( { entry_id => $id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } )->single;
