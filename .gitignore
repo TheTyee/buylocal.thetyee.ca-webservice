@@ -4,3 +4,4 @@ buy_local.json
 .DS_Store
 local
 sqitch/sqitch.conf
+buylocal.sql
