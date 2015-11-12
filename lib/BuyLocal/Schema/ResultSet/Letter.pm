@@ -12,6 +12,7 @@ sub get_letter {
     my $schema = $self->result_source->schema;
     my $letter = $self->search( { entry_id => $id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } )->single;
+    # TODO pass result through clean_letter()
     return $letter;
 }
 
