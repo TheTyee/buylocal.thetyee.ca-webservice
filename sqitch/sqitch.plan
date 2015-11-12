@@ -1,0 +1,6 @@
+%syntax-version=1.0.0
+%project=buylocal
+%uri=https://github.com/TheTyee/buylocal.thetyee.ca-webservice
+
+schema 2015-11-12T03:07:25Z Phillip Smith <phillipadsmith@Anonymous-III.local> # Schema for buylocal web service
+letters [schema] 2015-11-12T03:10:47Z Phillip Smith <phillipadsmith@Anonymous-III.local> # Table for letters
