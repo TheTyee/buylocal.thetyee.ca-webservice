@@ -27,7 +27,7 @@ sub read_letter {
     my $schema   = $self->schema();
     my $letter   = $schema->resultset( 'Letter' )->get_letter($id);
     
-    $self->data( letter => $letter )->message('Looks good');
+    $self->data( letters => $letter )->message('Looks good');
 
 }
 
