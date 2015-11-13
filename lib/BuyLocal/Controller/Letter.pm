@@ -33,9 +33,11 @@ sub read_letter {
 
 sub list_letter {
     my $self = shift;
+    my $page   = $self->param('page');
+    my $limit   = $self->param('limit');
 
     my $schema   = $self->schema();
-    my $letters   = $schema->resultset( 'Letter' )->get_letters();
+    my $letters   = $schema->resultset( 'Letter' )->get_letters($page, $limit);
     
     $self->data( letters => $letters )->message('Looks good');
 }
