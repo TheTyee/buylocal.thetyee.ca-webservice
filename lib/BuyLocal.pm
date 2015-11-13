@@ -7,6 +7,11 @@ sub startup {
 
     $self->plugin('JSONConfig');
     $self->plugin( 'REST' => { prefix => 'api', version => 'v1' } );
+    $self->plugin('SecureCORS');
+    $self->plugin('SecureCORS', { max_age => undef });
+    # TODO set this to a sensible value
+    $self->routes->to('cors.origin' => '*');
+
 
     my $config = $self->config;
     $self->helper(schema => sub {

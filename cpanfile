@@ -3,6 +3,7 @@ requires "Mojolicious::Plugin::JSONConfig", "0";
 requires "Mojolicious::Plugin::REST", "";
 requires "Mojolicious::Controller::REST", "";
 requires "Mojolicious::Plugin::JSONP", "";
+requires "Mojolicious::Plugin::SecureCORS", "";
 requires "DateTime::Format::DateParse", "";
 requires "Number::Format", "";
 requires "DBIx::Class", "";
