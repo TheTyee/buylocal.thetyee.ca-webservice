@@ -24,6 +24,7 @@ sub startup {
     my $r = $self->routes;
     # REST routing
     $r->rest_routes( name => 'Letter', methods => 'crudl' );
+    $r->rest_routes( name => 'Business', methods => 'rl' );
 
     # Normal route to controller
     $r->get('/')->to('letter#welcome');
