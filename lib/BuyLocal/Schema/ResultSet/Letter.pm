@@ -53,4 +53,27 @@ sub get_letters {
     return \@letters_clean;
 }
 
+sub get_businesses {
+    my ( $self, $page, $limit ) = @_;
+    my $schema = $self->result_source->schema;
+    my $dtf = $schema->storage->datetime_parser;
+    my $now = DateTime->now( time_zone => 'America/Vancouver' );
+    my $count = $self->search({}, {
+        columns => [ qw/business_name/ ],
+        distinct => 1
+    });
+    my @businesses = $self->search(
+        {   
+        },
+        {   
+            columns => [qw/business_name business_city/],
+            distinct => 1,
+            order_by => [qw/ business_name /],
+            # Recommended way to send simple data to a template vs. sending the ResultSet object
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+        }
+    );
+    return \@businesses, $count;
+}
+
 1;
