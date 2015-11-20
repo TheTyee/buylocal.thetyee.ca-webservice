@@ -10,14 +10,26 @@ my $log = Mojo::Log->new;
 
 sub create_letter {
     my $self = shift;
-    
-    #TODO Check for authorization
+    my $config = $self->config;
 
-    #TODO store the letter (coming from Wufoo) in the database
-    $log->debug( Dumper( $self->req->body ) );
-    
-    $self->data( hello => 'world' )->message('Not good');
+    return $self->status('401') unless $self->param('HandshakeKey') eq $config->{'handshakekey'};
 
+    my $entry = {
+        entry_id        => $self->param('EntryId'),
+        date_created    => $self->param('DateCreated'),
+        first_name      => $self->param('Field1'),
+        last_name       => $self->param('Field2'),
+        email           => $self->param('Field3'),
+        business_name   => $self->param('Field7'),
+        business_city   => $self->param('Field8'),
+        business_url    => $self->param('Field122'),
+        letter_text     => $self->param('Field5'),
+        public_name     => $self->param('Field11')
+    };
+
+    my $result  = $self->find_or_new($entry);
+
+    $self->data( id => $result->id )->message('New record created')->status('200');
 }
 
 sub read_letter {
@@ -26,7 +38,7 @@ sub read_letter {
 
     my $schema   = $self->schema();
     my $letter   = $schema->resultset( 'Letter' )->get_letter($id);
-    
+
     $self->data( letters => $letter )->message('Looks good');
 
 }
@@ -38,15 +50,15 @@ sub list_letter {
 
     my $schema   = $self->schema();
     my $letters   = $schema->resultset( 'Letter' )->get_letters($page, $limit);
-    
+
     $self->data( letters => $letters )->message('Looks good');
 }
 
 sub welcome {
-  my $self = shift;
+    my $self = shift;
 
-  # Render template "example/welcome.html.ep" with message
-  $self->render(msg => 'Nothing to see here');
+    # Render template "example/welcome.html.ep" with message
+    $self->render(msg => 'Nothing to see here');
 }
 
 1;
