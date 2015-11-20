@@ -29,6 +29,7 @@ sub get_letters {
             columns => [qw/entry_id first_name last_name business_name business_city date_created public_name letter_text/],
             page => $page || 1,     # page to return (default: 1)
             rows => $limit || 20,    # number of results per page (default: 20)
+            order_by =>  { -desc => 'date_created' },
             # Recommended way to send simple data to a template vs. sending the ResultSet object
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
