@@ -1,5 +1,9 @@
 package BuyLocal;
 use Mojo::Base 'Mojolicious';
+use Mojo::Log;
+use Data::Dumper;
+use Try::Tiny;
+use BuyLocal::Schema;
 
 # This method will run once at server start
 sub startup {
@@ -14,10 +18,36 @@ sub startup {
 
 
     my $config = $self->config;
+    # Log to STDERR
+    my $log = Mojo::Log->new;
+
     $self->helper(schema => sub {
             my $schema = BuyLocal::Schema->connect( $config->{'pg_dsn'},
                 $config->{'pg_user'}, $config->{'pg_pass'}, );
             return $schema;
+        });
+
+    $self->helper(find_or_new => sub {
+            my $self  = shift;
+            my $entry = shift;
+            my $schema  = $self->schema();
+            my $result;
+            try {
+                $result = $schema->txn_do(
+                    sub {
+                        my $rs = $schema->resultset( 'Letter' )
+                        ->find_or_new( {%$entry} );
+                        unless ( $rs->in_storage ) {
+                            $rs->insert;
+                        }
+                        return $rs;
+                    }
+                );
+            }
+            catch {
+                $log->warn( $_ );
+            };
+            return $result;
         });
 
     # Router
