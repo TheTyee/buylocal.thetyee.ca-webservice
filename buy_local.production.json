@@ -1,0 +1,6 @@
+{
+    "pg_dsn"        :       "dbi:Pg:dbname=",
+    "pg_user"       :       "",
+    "pg_pass"       :       "",
+    "handshakekey"  :       ""
+}
