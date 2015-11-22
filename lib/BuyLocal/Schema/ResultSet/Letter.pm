@@ -10,7 +10,7 @@ use parent 'DBIx::Class::ResultSet';
 sub get_letter {
     my ( $self, $id ) = @_;
     my $schema = $self->result_source->schema;
-    my $letter = $self->search( { entry_id => $id },
+    my $letter = $self->search( { id => $id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } )->single;
     # TODO pass result through clean_letter()
     return $letter;
@@ -26,7 +26,7 @@ sub get_letters {
             date_created => { '<=' => $dtf->format_datetime($now) }, # Don't return items from the future! :)
         },
         {   
-            columns => [qw/entry_id first_name last_name business_name business_city date_created public_name letter_text/],
+            columns => [qw/id first_name last_name business_name business_city date_created public_name letter_text/],
             page => $page || 1,     # page to return (default: 1)
             rows => $limit || 20,    # number of results per page (default: 20)
             order_by =>  { -desc => 'date_created' },

@@ -40,22 +40,7 @@ __PACKAGE__->table("letters");
 =head2 id
 
   data_type: 'integer'
-  is_auto_increment: 1
   is_nullable: 0
-  sequence: 'buylocal.letters_id_seq'
-
-=head2 entry_id
-
-  data_type: 'integer'
-  is_nullable: 0
-
-=head2 timestamp
-
-  data_type: 'timestamp with time zone'
-  default_value: current_timestamp
-  is_nullable: 0
-  original: {default_value => \"now()"}
-  timezone: 'America/Vancouver'
 
 =head2 date_created
 
@@ -107,22 +92,7 @@ __PACKAGE__->table("letters");
 
 __PACKAGE__->add_columns(
   "id",
-  {
-    data_type         => "integer",
-    is_auto_increment => 1,
-    is_nullable       => 0,
-    sequence          => "buylocal.letters_id_seq",
-  },
-  "entry_id",
   { data_type => "integer", is_nullable => 0 },
-  "timestamp",
-  {
-    data_type     => "timestamp with time zone",
-    default_value => \"current_timestamp",
-    is_nullable   => 0,
-    original      => { default_value => \"now()" },
-    timezone      => "America/Vancouver",
-  },
   "date_created",
   {
     data_type   => "timestamp with time zone",
@@ -160,8 +130,8 @@ __PACKAGE__->add_columns(
 __PACKAGE__->set_primary_key("id");
 
 
-# Created by DBIx::Class::Schema::Loader v0.07043 @ 2015-11-11 22:33:33
-# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lyPVScHIFqef84A6CBxLFg
+# Created by DBIx::Class::Schema::Loader v0.07043 @ 2015-11-21 22:38:02
+# DO NOT MODIFY THIS OR ANYTHING ABOVE! md5sum:lR3AFQ8ndWcotWIqa5eOtg
 
 # You can replace this text with custom code or comments, and it will be preserved on regeneration
 __PACKAGE__->table("buylocal.letters");

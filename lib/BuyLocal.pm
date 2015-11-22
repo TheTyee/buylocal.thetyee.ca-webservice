@@ -23,7 +23,7 @@ sub startup {
 
     $self->helper(schema => sub {
             my $schema = BuyLocal::Schema->connect( $config->{'pg_dsn'},
-                $config->{'pg_user'}, $config->{'pg_pass'}, );
+                $config->{'pg_user'}, $config->{'pg_pass'}, { pg_enable_utf8 => 1 } );
             return $schema;
         });
 

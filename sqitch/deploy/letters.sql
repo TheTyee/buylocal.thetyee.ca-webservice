@@ -6,9 +6,7 @@ BEGIN;
 SET client_min_messages = 'warning';
 
 CREATE TABLE buylocal.letters (
-    id        SERIAL PRIMARY KEY NOT NULL UNIQUE,
-    entry_id  INT NOT NULL,
-    timestamp TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    id  INT PRIMARY KEY NOT NULL UNIQUE,
     date_created TIMESTAMPTZ NOT NULL,
     first_name  TEXT NOT NULL,
     last_name   TEXT NOT NULL,

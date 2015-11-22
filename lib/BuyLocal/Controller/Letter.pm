@@ -15,7 +15,7 @@ sub create_letter {
     return $self->status('401') unless $self->param('HandshakeKey') eq $config->{'handshakekey'};
 
     my $entry = {
-        entry_id        => $self->param('EntryId'),
+        id              => $self->param('EntryId'),
         date_created    => $self->param('DateCreated'),
         first_name      => $self->param('Field1'),
         last_name       => $self->param('Field2'),
