@@ -28,7 +28,7 @@ sub create_letter {
     };
 
     my $result  = $self->find_or_new($entry);
-
+    
     $self->data( id => $result->id )->message('New record created')->status('200');
 }
 
@@ -38,9 +38,11 @@ sub read_letter {
 
     my $schema   = $self->schema();
     my $letter   = $schema->resultset( 'Letter' )->get_letter($id);
-
-    $self->data( letters => $letter )->message('Looks good');
-
+    if ( $letter ) {
+        $self->data( letters => $letter )->message('Looks good');
+    } else {
+        $self->status('422')->message('Entry does not exist');
+    }
 }
 
 sub list_letter {
