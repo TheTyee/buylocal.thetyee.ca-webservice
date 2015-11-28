@@ -26,7 +26,7 @@ sub get_letters {
             date_created => { '<=' => $dtf->format_datetime($now) }, # Don't return items from the future! :)
         },
         {   
-            columns => [qw/id first_name last_name business_name business_city date_created public_name letter_text/],
+            columns => [qw/id first_name last_name business_name business_url business_city date_created public_name letter_text/],
             page => $page || 1,     # page to return (default: 1)
             rows => $limit || 20,    # number of results per page (default: 20)
             order_by =>  { -desc => 'date_created' },
