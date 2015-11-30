@@ -1,6 +1,7 @@
 package BuyLocal::Controller::Letter;
 use Mojo::Base 'Mojolicious::Controller::REST';
 use Mojo::Log;
+use Mojo::Util qw(url_escape url_unescape trim squish encode);
 use Data::Dumper;
 use Try::Tiny;
 use BuyLocal::Schema;
@@ -53,6 +54,7 @@ sub list_letter {
     my $page  = $self->param( 'page' );
     my $limit = $self->param( 'limit' );
     my $query = $self->param( 'query' );
+    $query    = squish $query;
 
     my $schema = $self->schema();
     my $letters
