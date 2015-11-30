@@ -17,13 +17,17 @@ sub get_letter {
 }
 
 sub get_letters {
-    my ( $self, $page, $limit ) = @_;
+    my ( $self, $page, $limit, $query ) = @_;
     my $schema = $self->result_source->schema;
     my $dtf = $schema->storage->datetime_parser;
     my $now = DateTime->now( time_zone => 'America/Vancouver' );
     my @letters = $self->search(
         {   
             date_created => { '<=' => $dtf->format_datetime($now) }, # Don't return items from the future! :)
+            (   defined $query
+                ? ( 'business_name' => { 'like', "%$query%" } )
+                : ()
+            ),
         },
         {   
             columns => [qw/id first_name last_name business_name business_url business_city date_created public_name letter_text/],
