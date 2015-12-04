@@ -6,13 +6,14 @@ use strict;
 use warnings;
 use DateTime;
 use parent 'DBIx::Class::ResultSet';
+use Data::Dumper;
 
 sub get_letter {
     my ( $self, $id ) = @_;
     my $schema = $self->result_source->schema;
     my $letter = $self->search( { id => $id },
         { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } )->single;
-    # TODO pass result through clean_letter()
+    $letter = _clean_letter( $letter );
     return $letter;
 }
 
@@ -38,20 +39,9 @@ sub get_letters {
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
     );
-    # TODO move to utility subroutine for cleaning:
-    # - E-mails
-    # - Numbers
-    # - Bad words
     my @letters_clean;
     foreach my $letter (@letters) {
-        # Only those who want their name publicly displayed
-        if ( $letter->{'public_name'} =~ /yes/i ) {
-            $letter->{'last_name'} = uc substr($letter->{'last_name'}, 0, 1);
-        } else {
-            $letter->{'first_name'} = 'Anonymous';
-            $letter->{'last_name'}  = 'Fan';
-        }
-        delete $letter->{'public_name'};
+        $letter = _clean_letter( $letter );
         push @letters_clean, $letter; 
     }
 
@@ -80,5 +70,19 @@ sub get_businesses {
     );
     return \@businesses, $count;
 }
+
+sub _clean_letter {
+    my $letter = shift;
+    print Dumper( $letter );
+    if ( $letter->{'public_name'} =~ /yes/i ) {
+        $letter->{'last_name'} = uc substr($letter->{'last_name'}, 0, 1);
+    } else {
+        $letter->{'first_name'} = 'Anonymous';
+        $letter->{'last_name'}  = 'Fan';
+    }
+    delete $letter->{'public_name'};
+    return $letter;
+}
+
 
 1;
