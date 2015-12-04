@@ -11,17 +11,23 @@ use Data::Dumper;
 sub get_letter {
     my ( $self, $id ) = @_;
     my $schema = $self->result_source->schema;
-    my $letter = $self->search( { id => $id },
-        { result_class => 'DBIx::Class::ResultClass::HashRefInflator' } )->single;
+    my $letter = $self->search(
+        { id => $id },
+        {   columns => [
+                qw/id first_name last_name business_name business_url business_city date_created public_name letter_text/
+            ],
+            result_class => 'DBIx::Class::ResultClass::HashRefInflator'
+        }
+    )->single;
     $letter = _clean_letter( $letter );
     return $letter;
 }
 
 sub get_letters {
     my ( $self, $page, $limit, $query ) = @_;
-    my $schema = $self->result_source->schema;
-    my $dtf = $schema->storage->datetime_parser;
-    my $now = DateTime->now( time_zone => 'America/Vancouver' );
+    my $schema  = $self->result_source->schema;
+    my $dtf     = $schema->storage->datetime_parser;
+    my $now     = DateTime->now( time_zone => 'America/Vancouver' );
     my @letters = $self->search(
         {   
             date_created => { '<=' => $dtf->format_datetime($now) }, # Don't return items from the future! :)
@@ -40,9 +46,9 @@ sub get_letters {
         }
     );
     my @letters_clean;
-    foreach my $letter (@letters) {
+    foreach my $letter ( @letters ) {
         $letter = _clean_letter( $letter );
-        push @letters_clean, $letter; 
+        push @letters_clean, $letter;
     }
 
     return \@letters_clean;
@@ -51,12 +57,14 @@ sub get_letters {
 sub get_businesses {
     my ( $self, $page, $limit ) = @_;
     my $schema = $self->result_source->schema;
-    my $dtf = $schema->storage->datetime_parser;
-    my $now = DateTime->now( time_zone => 'America/Vancouver' );
-    my $count = $self->search({}, {
-        columns => [ qw/business_name/ ],
-        distinct => 1
-    });
+    my $dtf    = $schema->storage->datetime_parser;
+    my $now    = DateTime->now( time_zone => 'America/Vancouver' );
+    my $count  = $self->search(
+        {},
+        {   columns  => [qw/business_name/],
+            distinct => 1
+        }
+    );
     my @businesses = $self->search(
         {   
         },
@@ -75,14 +83,14 @@ sub _clean_letter {
     my $letter = shift;
     print Dumper( $letter );
     if ( $letter->{'public_name'} =~ /yes/i ) {
-        $letter->{'last_name'} = uc substr($letter->{'last_name'}, 0, 1);
-    } else {
+        $letter->{'last_name'} = uc substr( $letter->{'last_name'}, 0, 1 );
+    }
+    else {
         $letter->{'first_name'} = 'Anonymous';
         $letter->{'last_name'}  = 'Fan';
     }
     delete $letter->{'public_name'};
     return $letter;
 }
-
 
 1;
