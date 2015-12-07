@@ -6,3 +6,4 @@ local
 sqitch/sqitch.conf
 buylocal.sql
 buy_local.development.json
+NOTES.md

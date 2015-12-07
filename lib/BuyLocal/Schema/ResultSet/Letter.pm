@@ -24,22 +24,24 @@ sub get_letter {
 }
 
 sub get_letters {
-    my ( $self, $page, $limit ) = @_;
+    my ( $self, $page, $limit, $query ) = @_;
     my $schema  = $self->result_source->schema;
     my $dtf     = $schema->storage->datetime_parser;
     my $now     = DateTime->now( time_zone => 'America/Vancouver' );
     my @letters = $self->search(
-        {   date_created => { '<=' => $dtf->format_datetime( $now ) }
-            ,    # Don't return items from the future! :)
+        {   
+            date_created => { '<=' => $dtf->format_datetime($now) }, # Don't return items from the future! :)
+            (   defined $query
+                ? ( 'business_name' => { 'like', "%$query%" } )
+                : ()
+            ),
         },
-        {   columns => [
-                qw/id first_name last_name business_name business_url business_city date_created public_name letter_text/
-            ],
-            page => $page  || 1,    # page to return (default: 1)
-            rows => $limit || 20,   # number of results per page (default: 20)
-            order_by => { -desc => 'date_created' },
-
-# Recommended way to send simple data to a template vs. sending the ResultSet object
+        {   
+            columns => [qw/id first_name last_name business_name business_url business_city date_created public_name letter_text/],
+            page => $page || 1,     # page to return (default: 1)
+            rows => $limit || 20,    # number of results per page (default: 20)
+            order_by =>  { -desc => 'date_created' },
+            # Recommended way to send simple data to a template vs. sending the ResultSet object
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
     );
@@ -64,12 +66,13 @@ sub get_businesses {
         }
     );
     my @businesses = $self->search(
-        {},
-        {   columns  => [qw/business_name business_city/],
+        {   
+        },
+        {   
+            columns => [qw/business_name business_city/],
             distinct => 1,
             order_by => [qw/ business_name /],
-
-# Recommended way to send simple data to a template vs. sending the ResultSet object
+            # Recommended way to send simple data to a template vs. sending the ResultSet object
             result_class => 'DBIx::Class::ResultClass::HashRefInflator'
         }
     );
